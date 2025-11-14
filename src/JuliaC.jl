@@ -119,8 +119,11 @@ function _parse_cli_args(args::Vector{String})
             image_recipe.output_type = arg
             i == length(args) && error("Output specifier requires an argument")
             name_or_path = args[i+1]
-            if arg == "--output-exe" && !_is_name_only(name_or_path)
-                error("--output-exe expects a name (no path). Got: " * name_or_path)
+            if (arg == "--output-exe" || arg == "--output-o") && !_is_name_only(name_or_path)
+                error("--output-exe and --output-o expects a name (no path). Got: " * name_or_path)
+            end
+            if arg == "--output-o"
+                image_recipe.img_path = name_or_path
             end
             link_recipe.outname = name_or_path
             i += 1
