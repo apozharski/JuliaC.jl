@@ -10,9 +10,17 @@ using RelocatableFolders
 include("JuliaConfig.jl")
 const SCRIPTS_DIR = @path joinpath(@__DIR__, "scripts")
 
+function default_cpu_target()
+    Sys.ARCH === :i686        ?  "pentium4;" :
+    Sys.ARCH === :x86_64      ?  "x86_64"    :
+    Sys.ARCH === :arm         ?  "armv7-a;"  :
+    Sys.ARCH === :aarch64     ?  "generic"   :
+    Sys.ARCH === :powerpc64le ?  "pwr8"      :
+        "generic"
+end
 Base.@kwdef mutable struct ImageRecipe
     # codegen options
-    cpu_target::Union{String, Nothing} = nothing
+    cpu_target::Union{String, Nothing} = default_cpu_target()
     output_type::String = ""
     trim_mode::Union{String, Nothing} = nothing
     add_ccallables::Bool = false
@@ -154,6 +162,11 @@ function _parse_cli_args(args::Vector{String})
             bundle_specified = true
             if i < length(args) && (length(args[i+1]) == 0 || args[i+1][1] != '-')
                 bundle_recipe.output_dir = args[i+1]
+                i += 1
+            end
+        elseif arg == "--cpu-target"
+            if i < length(args) && (length(args[i+1]) == 0 || args[i+1][1] != '-')
+                image_recipe.cpu_target = args[i+1]
                 i += 1
             end
         elseif arg == "--privatize"
