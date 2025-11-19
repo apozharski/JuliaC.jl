@@ -70,14 +70,15 @@ function bundle_products(recipe::BundleRecipe)
     dest_dir = is_exe ? joinpath(recipe.output_dir, bindir) : joinpath(recipe.output_dir, libdir)
     mkpath(dest_dir)
     dest = joinpath(dest_dir, basename(outname))
+    if Sys.iswindows() && !is_exe
+        lib_name = basename(recipe.link_recipe.outname)
+        lib_basename, _ = splitext(lib_name)
+        import_lib_path = joinpath(dirname(recipe.link_recipe.outname), lib_basename * ".imp.lib")
+        mv(import_lib_path, joinpath(dest_dir, lib_basename*".imp.lib"), force=true)
+    end
+
     if abspath(outname) != abspath(dest)
         mv(outname, dest; force=true)
-        if Sys.iswindows() && !is_exe
-            lib_name = basename(recipe.link_recipe.outname)
-            lib_basename, _ = splitext(lib_name)
-            import_lib_path = joinpath(dirname(recipe.link_recipe.outname), lib_basename * ".imp.lib")
-            mv(import_lib_path, dest, force=true)
-        end
         recipe.link_recipe.outname = dest
     end
 
