@@ -141,7 +141,7 @@ function link_products(recipe::LinkRecipe)
         lib_name = basename(recipe.outname)
         if Sys.iswindows()
             lib_basename, _ = splitext(lib_name)
-            import_lib_path = joinpath(dirname(recipe.outname), lib_basename * ".dll.a")
+            import_lib_path = joinpath(dirname(recipe.outname), lib_basename * ".imp.lib")
             cmd2 = `$cmd2 -Wl,--out-implib=$(import_lib_path)`
         elseif Sys.isapple()
             cmd2 = `$cmd2 -Wl,-install_name,@rpath/$(lib_name)`
