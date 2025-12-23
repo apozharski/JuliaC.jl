@@ -133,6 +133,9 @@ function _parse_cli_args(args::Vector{String})
             if arg == "--output-o"
                 image_recipe.img_path = name_or_path
             end
+            if arg == "--output-bc"
+                image_recipe.img_path = name_or_path
+            end
             link_recipe.outname = name_or_path
             i += 1
         elseif startswith(arg, "--trim=")

@@ -24,6 +24,8 @@ function bundle_products(recipe::BundleRecipe)
     stdlibs = unique(vcat(PackageCompiler.gather_stdlibs_project(ctx2),
                           intersect(PackageCompiler._STDLIBS, map(x->x.name, Base._sysimage_modules))))
     PackageCompiler.bundle_julia_libraries(recipe.output_dir, stdlibs)
+    # TODO(@apozharski) make this an option and maybe put it somewhere reasonable?
+    PackageCompiler.bundle_julia_executable(recipe.output_dir)
     PackageCompiler.bundle_artifacts(ctx2, recipe.output_dir; include_lazy_artifacts=false) # Lazy artifacts
 
     # Re-home bundled libraries into the desired bundle layout
