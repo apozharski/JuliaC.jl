@@ -25,7 +25,11 @@ function bundle_products(recipe::BundleRecipe)
                           intersect(PackageCompiler._STDLIBS, map(x->x.name, Base._sysimage_modules))))
     PackageCompiler.bundle_julia_libraries(recipe.output_dir, stdlibs)
     # TODO(@apozharski) make this an option and maybe put it somewhere reasonable?
-    PackageCompiler.bundle_julia_executable(recipe.output_dir)
+    # PackageCompiler.bundle_julia_executable(recipe.output_dir)
+    # # TODO(@apozharski) This is only necessary sometimes namely: when bundling executable?
+    # PackageCompiler.bundle_julia_libexec(ctx2, recipie.lib)
+    # # TODO(@apozharski) this only works on linux for now.
+    # symlink(julia)
     PackageCompiler.bundle_artifacts(ctx2, recipe.output_dir; include_lazy_artifacts=false) # Lazy artifacts
 
     # Re-home bundled libraries into the desired bundle layout
