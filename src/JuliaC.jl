@@ -60,6 +60,7 @@ Base.@kwdef mutable struct BundleRecipe
     link_recipe::LinkRecipe = LinkRecipe()
     output_dir::Union{String, Nothing} = nothing # if nothing, don't bundle
     libdir::String = Sys.iswindows() ? "bin" : "lib"
+    include_preferences::Bool = false
     privatize::Bool = false
 end
 
@@ -94,6 +95,7 @@ function _print_usage(io::IO=stdout)
     println(io, "  --output-bc <path>          Output LLVM bitcode archive")
     println(io, "  --project <path>            Project to instantiate/precompile")
     println(io, "  --bundle <dir>              Bundle libjulia, stdlibs, and artifacts")
+    println(io, "  --include-preferences       Bundle prefernces. (Only if --bundle is passed)")
     println(io, "  --privatize                 Privatize bundled libjulia (Unix)")
     println(io, "  --trim[=mode]               Strip IR/metadata (e.g. --trim=safe)")
     println(io, "  --compile-ccallable         Export ccallable entrypoints")
@@ -167,6 +169,8 @@ function _parse_cli_args(args::Vector{String})
                 bundle_recipe.output_dir = args[i+1]
                 i += 1
             end
+        elseif arg == "--include-preferences"
+            bundle_recipe.include_preferences = true
         elseif arg == "--cpu-target"
             if i < length(args) && (length(args[i+1]) == 0 || args[i+1][1] != '-')
                 image_recipe.cpu_target = args[i+1]
