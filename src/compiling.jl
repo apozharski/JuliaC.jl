@@ -78,7 +78,7 @@ function compile_products(recipe::ImageRecipe)
     end
 
     project_arg = recipe.project == "" ? Base.active_project() : recipe.project
-    env_overrides = Dict{String,Any}()
+    env_overrides = Dict{String,Any}("JULIA_LOAD_PATH"=>nothing)
     tmp_prefs_env = nothing
     if is_trim_enabled(recipe)
         load_path_sep = Sys.iswindows() ? ";" : ":"
