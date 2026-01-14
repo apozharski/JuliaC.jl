@@ -26,6 +26,7 @@ function bundle_products(recipe::BundleRecipe)
     PackageCompiler.bundle_julia_libraries(recipe.output_dir, stdlibs)
     PackageCompiler.bundle_artifacts(ctx2, recipe.output_dir; include_lazy_artifacts=false) # Lazy artifacts
     if recipe.include_preferences
+        PackageCompiler.bundle_project(ctx2, recipe.output_dir) # Also bundle project because otherwise things do not work
         PackageCompiler.bundle_preferences(ctx2, recipe.output_dir)
     end
 
